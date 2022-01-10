@@ -1,0 +1,9 @@
+[package]
+name = "rtaudio_example_rust"
+version = "0.1.0"
+authors = ["MajorX234 <majorx234@googlemail.com>"]
+edition = "2018"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
