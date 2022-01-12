@@ -51,4 +51,5 @@ fn main() {
     let num_samples = fnum_samples as usize;
     let mywave = SawWave::new(freq, num_samples);
     mywave.print();
+    // debuging println!("{:?}", mywave);
 }

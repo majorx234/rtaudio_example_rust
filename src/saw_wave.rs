@@ -1,4 +1,5 @@
 use crate::wave::Wave;
+#[derive(Debug)]
 pub struct SawWave {
     freq: u32,
     num_samples: usize,
