@@ -16,11 +16,7 @@
  */
 
 use std::env::args;
-mod saw_wave;
-mod wave;
 
-use saw_wave::SawWave;
-use wave::Wave;
 fn main() {
     let mut argit = args();
     let freq = argit.nth(1).clone();
@@ -46,9 +42,22 @@ fn main() {
         panic!("No duration argument given");
     };
 
-    let fsample_rate: f32 = 48000.0;
-    let fnum_samples = fsample_rate * duration;
-    let num_samples = fnum_samples as usize;
-    let mywave = SawWave::new(freq, num_samples);
-    mywave.print();
+    let sample_rate: u64 = 48000;
+    let fsample_rate: f32 = sample_rate as f32;
+    let end = fsample_rate * duration;
+
+    let freq: f32 = freq as f32;
+    let fmax = fsample_rate / freq;
+    let max: u64 = fmax as u64;
+
+    let end: u64 = end as u64;
+    println!("{}", end);
+
+    for n in 0..end {
+        let s_mod = n % max;
+        let s: f32 = s_mod as f32;
+        let out: f32 = 2.0 * (s / fmax) - 1.0;
+
+        println!("{}", out);
+    }
 }
