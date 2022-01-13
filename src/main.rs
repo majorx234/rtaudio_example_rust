@@ -17,14 +17,23 @@
 
 use std::env::args;
 mod saw_wave;
+mod tri_wave;
 mod wave;
 
 use saw_wave::SawWave;
+use tri_wave::TriWave;
 use wave::Wave;
 fn main() {
     let mut argit = args();
-    let freq = argit.nth(1).clone();
+    let wave_form = argit.nth(1).clone();
+    let freq = argit.next().clone();
     let duration = argit.next().clone();
+
+    let wave_form: String = if let Some(wave_form) = wave_form {
+        wave_form
+    } else {
+        panic!("No wave_form argument given")
+    };
 
     let freq = if let Some(freq) = freq {
         if let Ok(freq) = str::parse::<u32>(&freq) {
@@ -49,7 +58,12 @@ fn main() {
     let fsample_rate: f32 = 48000.0;
     let fnum_samples = fsample_rate * duration;
     let num_samples = fnum_samples as usize;
-    let mywave = SawWave::new(freq, num_samples);
-    mywave.print();
+    if wave_form.eq("saw") {
+        let mywave = SawWave::new(freq, num_samples);
+        mywave.print();
+    } else if wave_form.eq("tri") {
+        let mywave = TriWave::new(freq, num_samples);
+        mywave.print();
+    }
     // debuging println!("{:?}", mywave);
 }
