@@ -16,13 +16,13 @@ impl TriWave {
         let mut values_data = Vec::new();
 
         for i in 0..num_samples {
-            let s: f32 = 0.0;
+            let mut s: f32 = 0.0;
             let n: usize = i % max;
             let f_n: f32 = n as f32;
             if f_n < (fmax * 0.5) {
-                let s = ((2.0 * f_n) / fmax) - 0.5;
+                s = ((2.0 * f_n) / fmax) - 0.5;
             } else {
-                let s = ((-2.0 * f_n) / fmax) + 1.5;
+                s = ((-2.0 * f_n) / fmax) + 1.5;
             }
             let out: f32 = 2.0 * s;
             values_data.push(out);
