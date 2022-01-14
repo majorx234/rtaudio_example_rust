@@ -13,20 +13,11 @@ impl TriWave {
         let fmax = fsample_rate / ffreq;
         let max: usize = fmax as usize;
 
-        let mut values_data = Vec::new();
+        let shift: usize = max - (max / 4);
 
-        for i in 0..num_samples {
-            let mut s: f32 = 0.0;
-            let n: usize = i % max;
-            let f_n: f32 = n as f32;
-            if f_n < (fmax * 0.5) {
-                s = ((2.0 * f_n) / fmax) - 0.5;
-            } else {
-                s = ((-2.0 * f_n) / fmax) + 1.5;
-            }
-            let out: f32 = 2.0 * s;
-            values_data.push(out);
-        }
+        let values_data = ((0 + shift)..(num_samples + shift))
+            .map(|i| ((i % max) as f32 / fmax * 2.0 - 1.0).abs() * 2.0 - 1.0)
+            .collect();
 
         return TriWave {
             freq: freq,
