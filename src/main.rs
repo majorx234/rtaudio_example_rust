@@ -17,10 +17,12 @@
 
 use std::env::args;
 mod saw_wave;
+mod sine_wave;
 mod tri_wave;
 mod wave;
 
 use saw_wave::SawWave;
+use sine_wave::SineWave;
 use tri_wave::TriWave;
 use wave::Wave;
 fn main() {
@@ -63,6 +65,9 @@ fn main() {
         mywave.print();
     } else if wave_form.eq("tri") {
         let mywave = TriWave::new(freq, num_samples);
+        mywave.print();
+    } else if wave_form.eq("sin") {
+        let mywave = SineWave::new(freq, num_samples);
         mywave.print();
     }
     // debuging println!("{:?}", mywave);
