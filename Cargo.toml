@@ -5,5 +5,14 @@ authors = ["MajorX234 <majorx234@googlemail.com>"]
 edition = "2018"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+[[bin]]
+name = "gen_wave"
+path = "src/gen_wave/bin/main.rs"
+
+[[bin]]
+name = "play_wave"
+path = "src/play_wave/bin/main.rs"
 
 [dependencies]
+rodio = "0.14.0"
+scan_fmt = "0.2.6"
