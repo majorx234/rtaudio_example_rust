@@ -10,6 +10,10 @@ name = "gen_wave"
 path = "src/gen_wave/bin/main.rs"
 
 [[bin]]
+name = "adsr_modificator"
+path = "src/adsr_modificator/bin/main.rs"
+
+[[bin]]
 name = "play_wave"
 path = "src/play_wave/bin/main.rs"
 
