@@ -16,11 +16,12 @@
  */
 
 use std::env::args;
+mod invsaw_wave;
 mod saw_wave;
 mod sine_wave;
 mod tri_wave;
 mod wave;
-
+use invsaw_wave::InvSawWave;
 use saw_wave::SawWave;
 use sine_wave::SineWave;
 use tri_wave::TriWave;
@@ -62,6 +63,9 @@ fn main() {
     let num_samples = fnum_samples as usize;
     if wave_form.eq("saw") {
         let mywave = SawWave::new(freq, num_samples);
+        mywave.print();
+    } else if wave_form.eq("invsaw") {
+        let mywave = InvSawWave::new(freq, num_samples);
         mywave.print();
     } else if wave_form.eq("tri") {
         let mywave = TriWave::new(freq, num_samples);
