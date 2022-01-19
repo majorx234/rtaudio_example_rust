@@ -1,4 +1,6 @@
 use crate::wave::Wave;
+use rtaudio_lib::write_data;
+
 #[derive(Debug)]
 pub struct TriWave {
     freq: u32,
@@ -29,9 +31,6 @@ impl TriWave {
 
 impl Wave for TriWave {
     fn print(&self) {
-        println!("{}", self.num_samples);
-        for sample in &self.values {
-            println!("{}", sample);
-        }
+        write_data(&self.values, self.num_samples);
     }
 }

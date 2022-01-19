@@ -1,4 +1,5 @@
 use crate::wave::Wave;
+use rtaudio_lib::write_data;
 #[derive(Debug)]
 pub struct SawWave {
     freq: u32,
@@ -31,9 +32,6 @@ impl SawWave {
 
 impl Wave for SawWave {
     fn print(&self) {
-        println!("{}", self.num_samples);
-        for sample in &self.values {
-            println!("{}", sample);
-        }
+        write_data(&self.values, self.num_samples);
     }
 }

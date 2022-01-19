@@ -5,6 +5,10 @@ authors = ["MajorX234 <majorx234@googlemail.com>"]
 edition = "2018"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+[lib]
+name = "rtaudio_lib"
+path = "src/lib.rs"
+
 [[bin]]
 name = "gen_wave"
 path = "src/gen_wave/bin/main.rs"
