@@ -16,11 +16,13 @@
  */
 
 use std::env::args;
+mod fm_wave;
 mod invsaw_wave;
 mod saw_wave;
 mod sine_wave;
 mod tri_wave;
 mod wave;
+use fm_wave::FMWave;
 use invsaw_wave::InvSawWave;
 use saw_wave::SawWave;
 use sine_wave::SineWave;
@@ -31,6 +33,7 @@ fn main() {
     let wave_form = argit.nth(1).clone();
     let freq = argit.next().clone();
     let duration = argit.next().clone();
+    let freq_mod: f32 = 3.6;
 
     let wave_form: String = if let Some(wave_form) = wave_form {
         wave_form
@@ -72,6 +75,9 @@ fn main() {
         mywave.print();
     } else if wave_form.eq("sin") {
         let mywave = SineWave::new(freq, num_samples);
+        mywave.print();
+    } else if wave_form.eq("fm") {
+        let mywave = FMWave::new(freq, num_samples, freq_mod);
         mywave.print();
     }
     // debuging println!("{:?}", mywave);
