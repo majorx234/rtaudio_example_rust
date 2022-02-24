@@ -15,7 +15,7 @@ impl FMWave {
         let fsample_rate: f32 = 48000.0;
         let ffreq = freq as f32;
         let shift = |t: f32, fmod: f32, fs: f32| -> f32 {
-            1800.0 / fmod * (2.0 * f32::consts::PI * t * fmod / fs).sin()
+            0.11 / fmod * (2.0 * f32::consts::PI * t * fmod / fs).sin()
         };
         let values_data = (0..num_samples)
             .map(|i| {
