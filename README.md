@@ -22,7 +22,7 @@
 ```
 - plot a wav via GNU Plot
 ```bash
-./gen_wave sine 440.0 0.1 |./adsr_modificator|gnuplot -p -e "set xrange[1:4800]; plot '-' "
+./gen_wave sin 440 0.1 |./adsr_modificator|gnuplot -p -e "set xrange[1:4800]; plot '-' "
 ```
 - 2nd plot via GNU Plot
 ```bash
