@@ -28,3 +28,7 @@
 ```bash
 ./gen_wave tri 440 0.2|./adsr_modificator|gnuplot -p -e "set xrange[1:9600]; plot '-' "
 ```
+- play a fm wav
+```bash
+./gen_wave fm 50 6.0 |./adsr_modificator|./play_wave
+```
