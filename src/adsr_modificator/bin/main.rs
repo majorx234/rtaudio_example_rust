@@ -1,7 +1,5 @@
-#[macro_use]
 extern crate scan_fmt;
 
-mod adsr_modificator;
 use rtaudio_lib::adsr;
 use rtaudio_lib::read_data;
 use rtaudio_lib::write_data;
