@@ -1,5 +1,6 @@
 #[macro_use]
 extern crate scan_fmt;
+pub mod effect;
 
 pub fn read_data() -> (usize, std::vec::Vec<f32>) {
     let mut line = String::new();
