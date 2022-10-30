@@ -21,6 +21,10 @@ path = "src/adsr_modificator/bin/main.rs"
 name = "play_wave"
 path = "src/play_wave/bin/main.rs"
 
+[[bin]]
+name = "overdrive"
+path = "src/overdrive/bin/main.rs"
+
 [dependencies]
 rodio = "0.14.0"
 scan_fmt = "0.2.6"
