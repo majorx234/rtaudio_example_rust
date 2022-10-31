@@ -25,6 +25,11 @@ path = "src/play_wave/bin/main.rs"
 name = "overdrive"
 path = "src/overdrive/bin/main.rs"
 
+[[bin]]
+name = "filter"
+path = "src/filter/bin/main.rs"
+
+
 [dependencies]
 rodio = "0.14.0"
 scan_fmt = "0.2.6"
