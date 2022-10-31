@@ -37,4 +37,5 @@
 - https://github.com/derekdreery/mixjack
   - taken idea for filter design
 - https://github.com/Bujiraso/rickyhan.com-guitar-effects-in-rust
+- https://github.com/0b01/rasta
   - taken idea for effect trait and code for overdrive
