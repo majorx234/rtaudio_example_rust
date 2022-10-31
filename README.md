@@ -1,5 +1,5 @@
 # rtaudio_example_rust
-- rewrite of rtaudio_example in Rust
+- rewrite of rtaudio_example (https://github.com/majorx234/rtaudio_example) in Rust
 - learning Rust & rodio
 - learning audio prgramming 
 
@@ -32,3 +32,9 @@
 ```bash
 ./gen_wave fm 50 6.0 |./adsr_modificator|./play_wave
 ```
+
+## Links
+- https://github.com/derekdreery/mixjack
+  - taken idea for filter design
+- https://github.com/Bujiraso/rickyhan.com-guitar-effects-in-rust
+  - taken idea for effect trait and code for overdrive
