@@ -16,6 +16,8 @@ pub struct FIRFilter {
     buffer: Vec<f32>,
     gain: f32,
     filter_type: FilterType,
+    sample_rate: f32,
+    len: usize,
 }
 
 impl Effect for FIRFilter {
@@ -27,6 +29,8 @@ impl Effect for FIRFilter {
             buffer: Vec::new(),
             gain: 1.0,
             filter_type: FilterType::None,
+            sample_rate: 48000.0,
+            len: 1024,
         }
     }
     fn name(&self) -> &'static str {
