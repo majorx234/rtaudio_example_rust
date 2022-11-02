@@ -1,5 +1,13 @@
 use rtaudio_lib::effect::Effect;
 
+#[derive(Debug, Clone, PartialEq)]
+pub enum FilterType {
+    LowPass(f32),
+    BandPass(f32, f32),
+    HighPass(f32),
+    None,
+}
+
 #[derive(Debug, Clone)]
 pub struct FIRFilter {
     pub bypassing: bool,
@@ -7,6 +15,7 @@ pub struct FIRFilter {
     weights_original: Vec<f32>,
     buffer: Vec<f32>,
     gain: f32,
+    filter_type: FilterType,
 }
 
 impl Effect for FIRFilter {
@@ -17,6 +26,7 @@ impl Effect for FIRFilter {
             weights_original: Vec::new(),
             buffer: Vec::new(),
             gain: 1.0,
+            filter_type: FilterType::None,
         }
     }
     fn name(&self) -> &'static str {
