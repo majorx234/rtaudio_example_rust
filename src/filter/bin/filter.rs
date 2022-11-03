@@ -1,4 +1,5 @@
 use rtaudio_lib::effect::Effect;
+use std::f32::consts::PI;
 
 #[derive(Debug, Clone, PartialEq)]
 pub enum FilterType {
@@ -18,6 +19,26 @@ pub struct FIRFilter {
     filter_type: FilterType,
     sample_rate: f32,
     len: usize,
+}
+
+impl FIRFilter {
+    pub fn low_pass(cutoff: f32) -> Self {
+        let mut new_lp_filter = FIRFilter::new();
+        let len = if new_lp_filter.len % 2 == 0 {
+            new_lp_filter.len + 1
+        } else {
+            new_lp_filter.len
+        };
+
+        new_lp_filter.weights = Vec::with_capacity(len);
+        let angular_cutoff = (2.0 * PI * cutoff) / new_lp_filter.sample_rate;
+
+        let middle = (len / 2) as isize; // should be odd
+        for i in -middle..=middle {
+            new_lp_filter.weights[(i + middle) as usize] = 0.0;
+        }
+        new_lp_filter
+    }
 }
 
 impl Effect for FIRFilter {
