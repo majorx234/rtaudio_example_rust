@@ -33,3 +33,4 @@ path = "src/filter/bin/main.rs"
 [dependencies]
 rodio = "0.14.0"
 scan_fmt = "0.2.6"
+dsp = "0.10.2"

@@ -1,3 +1,4 @@
+use dsp::window;
 use rtaudio_lib::effect::Effect;
 use std::f32::consts::PI;
 
@@ -30,13 +31,17 @@ impl FIRFilter {
             new_lp_filter.len
         };
 
-        new_lp_filter.weights = Vec::with_capacity(len);
+        let mut sinc: Vec<f32> = Vec::with_capacity(len);
         let angular_cutoff = (2.0 * PI * cutoff) / new_lp_filter.sample_rate;
 
         let middle = (len / 2) as isize; // should be odd
+        let blackman_window = window::blackman(len);
         for i in -middle..=middle {
-            new_lp_filter.weights[(i + middle) as usize] = 0.0;
+            sinc[(i + middle) as usize] = (angular_cutoff * i as f32).sin() / (PI * i as f32);
         }
+        sinc[middle as usize] = 2.0 * cutoff;
+        blackman_window.apply(&sinc, &mut new_lp_filter.weights);
+
         new_lp_filter
     }
 }
