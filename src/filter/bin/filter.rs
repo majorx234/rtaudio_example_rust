@@ -92,6 +92,13 @@ impl FIRFilter {
 
         new_hp_filter
     }
+
+    pub fn print_weights(&self) {
+        println!("{}", self.weights.len());
+        for sample in &self.weights {
+            println!("{}", sample);
+        }
+    }
 }
 
 impl Effect for FIRFilter {
