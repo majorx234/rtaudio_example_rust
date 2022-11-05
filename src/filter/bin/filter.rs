@@ -70,6 +70,28 @@ impl FIRFilter {
 
         new_bp_filter
     }
+
+    pub fn high_pass(cutoff: f32) -> Self {
+        let mut new_hp_filter = FIRFilter::new();
+        let len = if new_hp_filter.len % 2 == 0 {
+            new_hp_filter.len + 1
+        } else {
+            new_hp_filter.len
+        };
+
+        let mut sinc: Vec<f32> = Vec::with_capacity(len);
+        let angular_cutoff = (2.0 * PI * cutoff) / new_hp_filter.sample_rate;
+
+        let middle = (len / 2) as isize; // should be odd
+        let blackman_window = window::blackman(len);
+        for i in -middle..=middle {
+            sinc[(i + middle) as usize] = -(angular_cutoff * i as f32).sin() / (PI * i as f32);
+        }
+        sinc[middle as usize] = 1.0 - 2.0 * cutoff / new_hp_filter.sample_rate;
+        blackman_window.apply(&sinc, &mut new_hp_filter.weights);
+
+        new_hp_filter
+    }
 }
 
 impl Effect for FIRFilter {
