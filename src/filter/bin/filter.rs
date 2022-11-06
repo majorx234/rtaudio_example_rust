@@ -139,7 +139,65 @@ impl Effect for FIRFilter {
             }
             return;
         }
+        let convolution_fct = |input: &[f32],
+                               output: &mut [f32],
+                               buffer: &mut [f32],
+                               weights: &[f32]| {
+            assert!(input.len() == output.len());
+            let w_len = weights.len();
+            let i_len = input.len();
+
+            // convolution
+            //in = prev, out = this
+            for (buf_sample, output_sample) in buffer.iter().zip(output.iter_mut()) {
+                *output_sample += *buf_sample;
+            }
+
+            // in = this, out = this
+            for input_idx in 0..(i_len - w_len) {
+                let sample_in = input[input_idx];
+                if sample_in != 0.0 {
+                    for (output_idx, weight) in (input_idx..input_idx + w_len).zip(weights.iter()) {
+                        output[output_idx] += weight;
+                    }
+                }
+            }
+            // in = this, out = this + next
+            for s in buffer.iter_mut() {
+                // zero out inter-frame buffer.
+                *s = 0.0;
+            }
+            for input_idx in (i_len - w_len)..i_len {
+                let sample_in = input[input_idx];
+                if sample_in != 0.0 {
+                    let mut idx = 0;
+
+                    // first add into this frame
+                    while idx < (i_len - input_idx) {
+                        output[input_idx + idx] += sample_in * weights[idx];
+                        idx += 1;
+                    }
+                    // then add into the next frame with help of the inter-frame buffer
+                    while idx < w_len {
+                        buffer[idx - (i_len - input_idx)] += sample_in * weights[idx];
+                        idx += 1;
+                    }
+                }
+            }
+        };
+
+        if let Some(input_l) = input_l {
+            if let Some(output_l) = output_l {
+                convolution_fct(input_l, output_l, &mut self.buffer_l, &self.weights);
+            }
+        }
+        if let Some(input_r) = input_r {
+            if let Some(output_r) = output_r {
+                convolution_fct(input_r, output_r, &mut self.buffer_r, &self.weights);
+            }
+        }
     }
+
     fn bypass(&mut self) {
         self.bypassing = !self.bypassing;
     }
