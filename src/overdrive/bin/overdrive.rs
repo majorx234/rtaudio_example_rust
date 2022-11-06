@@ -12,7 +12,7 @@ impl Effect for Overdrive {
         "overdrive"
     }
     fn process_samples(
-        &self,
+        &mut self,
         input_l: Option<&[f32]>,
         input_r: Option<&[f32]>,
         output_l: Option<&mut [f32]>,
