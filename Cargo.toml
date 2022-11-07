@@ -29,6 +29,10 @@ path = "src/overdrive/bin/main.rs"
 name = "filter"
 path = "src/filter/bin/main.rs"
 
+[[bin]]
+name = "filter_test"
+path = "src/filter/bin/filter_test.rs"
+
 
 [dependencies]
 rodio = "0.14.0"
