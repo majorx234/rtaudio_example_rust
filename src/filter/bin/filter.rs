@@ -34,6 +34,8 @@ impl FIRFilter {
 
         let mut sinc: Vec<f32> = vec![0.0; len];
         new_lp_filter.weights = vec![0.0; len];
+        new_lp_filter.buffer_l = vec![0.0; len];
+        new_lp_filter.buffer_r = vec![0.0; len];
         let angular_cutoff = (2.0 * PI * cutoff) / new_lp_filter.sample_rate;
 
         let middle = (len / 2) as isize; // should be odd
@@ -57,6 +59,8 @@ impl FIRFilter {
 
         let mut sinc: Vec<f32> = vec![0.0; len];
         new_bp_filter.weights = vec![0.0; len];
+        new_bp_filter.buffer_l = vec![0.0; len];
+        new_bp_filter.buffer_r = vec![0.0; len];
 
         let angular_low_cutoff = (2.0 * PI * low_cutoff) / new_bp_filter.sample_rate;
         let angular_high_cutoff = (2.0 * PI * high_cutoff) / new_bp_filter.sample_rate;
@@ -85,6 +89,9 @@ impl FIRFilter {
 
         let mut sinc: Vec<f32> = vec![0.0; len];
         new_hp_filter.weights = vec![0.0; len];
+        new_hp_filter.buffer_l = vec![0.0; len];
+        new_hp_filter.buffer_r = vec![0.0; len];
+
         let angular_cutoff = (2.0 * PI * cutoff) / new_hp_filter.sample_rate;
 
         let middle = (len / 2) as isize; // should be odd
