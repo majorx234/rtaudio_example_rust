@@ -10,6 +10,17 @@ pub struct Delay {
     frame_size: usize,
 }
 
+impl Delay {
+    pub fn set_delay(&mut self, t_in_sec: f32) {
+        let delay_time = self.sample_rate * t_in_sec;
+        self.delay_time = self.delay_time.min(delay_time as usize);
+    }
+
+    pub fn set_feedback(&mut self, amount: f32) {
+        self.feedback = amount.min(1.0);
+    }
+}
+
 impl Effect for Delay {
     fn new() -> Self {
         let delay_buffer_size: usize = 48000 * 5;
@@ -48,6 +59,7 @@ impl Effect for Delay {
             return;
         }
     }
+
     fn bypass(&mut self) {
         self.bypassing = !self.bypassing;
     }
