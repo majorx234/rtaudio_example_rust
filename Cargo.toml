@@ -25,6 +25,11 @@ path = "src/play_wave/bin/main.rs"
 name = "overdrive"
 path = "src/overdrive/bin/main.rs"
 
+
+[[bin]]
+name = "delay"
+path = "src/delay/bin/main.rs"
+
 [[bin]]
 name = "filter"
 path = "src/filter/bin/main.rs"
