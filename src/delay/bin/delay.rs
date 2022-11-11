@@ -23,6 +23,9 @@ impl Delay {
     pub fn set_feedback(&mut self, amount: f32) {
         self.feedback = amount.min(1.0);
     }
+    pub fn set_frame_size(&mut self, new_frame_size: usize) {
+        self.frame_size = new_frame_size;
+    }
 }
 
 impl Effect for Delay {
