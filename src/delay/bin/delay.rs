@@ -36,7 +36,7 @@ impl Effect for Delay {
             delay_buffer_l_o_idx: 0,
             delay_buffer_r_i_idx: 0,
             delay_buffer_r_o_idx: 0,
-            delay_time: 48000,
+            delay_time: 500,
             feedback: 0.33,
             sample_rate: 48000.0,
             frame_size: 1024,
