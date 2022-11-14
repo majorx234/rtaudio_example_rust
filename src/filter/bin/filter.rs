@@ -25,7 +25,7 @@ pub struct FIRFilter {
 }
 
 impl FIRFilter {
-    pub fn low_pass(cutoff: f32) -> Self {
+    pub fn low_pass(cutoff: f32, filter_len: usize) -> Self {
         let mut new_lp_filter = FIRFilter::new();
         let len = if new_lp_filter.len % 2 == 0 {
             new_lp_filter.len + 1
@@ -50,7 +50,7 @@ impl FIRFilter {
         new_lp_filter
     }
 
-    pub fn band_pass(low_cutoff: f32, high_cutoff: f32) -> Self {
+    pub fn band_pass(low_cutoff: f32, high_cutoff: f32, filter_len: usize) -> Self {
         let mut new_bp_filter = FIRFilter::new();
         let len = if new_bp_filter.len % 2 == 0 {
             new_bp_filter.len + 1
@@ -80,7 +80,7 @@ impl FIRFilter {
         new_bp_filter
     }
 
-    pub fn high_pass(cutoff: f32) -> Self {
+    pub fn high_pass(cutoff: f32, filter_len: usize) -> Self {
         let mut new_hp_filter = FIRFilter::new();
         let len = if new_hp_filter.len % 2 == 0 {
             new_hp_filter.len + 1

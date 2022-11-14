@@ -42,13 +42,14 @@ fn main() {
     };
 
     let fsample_rate: f32 = 48000.0;
+    let filter_len: usize = 512;
 
     let mut my_fir_filter = if filter_form.eq("lp") {
-        FIRFilter::low_pass(cutoff_freq1)
+        FIRFilter::low_pass(cutoff_freq1, filter_len)
     } else if filter_form.eq("bp") {
-        FIRFilter::band_pass(cutoff_freq1, cutoff_freq2)
+        FIRFilter::band_pass(cutoff_freq1, cutoff_freq2, filter_len)
     } else if filter_form.eq("hp") {
-        FIRFilter::high_pass(cutoff_freq1)
+        FIRFilter::high_pass(cutoff_freq1, filter_len)
     } else {
         FIRFilter::new()
     };
