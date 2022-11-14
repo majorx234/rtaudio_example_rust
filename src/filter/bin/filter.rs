@@ -156,22 +156,22 @@ impl Effect for FIRFilter {
             }
             return;
         }
-        let convolution_fct = |input: &[f32],
-                               output: &mut [f32],
-                               buffer: &mut [f32],
-                               weights: &[f32],
-                               frame_size: usize| {
-            assert!(input.len() == output.len());
-            let w_len = weights.len();
+        let convolution_fct = if self.frame_size > self.weights.len() {
+            |input: &[f32],
+             output: &mut [f32],
+             buffer: &mut [f32],
+             weights: &[f32],
+             frame_size: usize| {
+                assert!(input.len() == output.len());
+                let w_len = weights.len();
 
-            // convolution
-            //in = prev, out = this
-            for (buf_sample, output_sample) in buffer.iter().zip(output.iter_mut()) {
-                *output_sample += *buf_sample;
-            }
+                // convolution
+                //in = prev, out = this
+                for (buf_sample, output_sample) in buffer.iter().zip(output.iter_mut()) {
+                    *output_sample += *buf_sample;
+                }
 
-            // in = this, out = this
-            if (frame_size > w_len) {
+                // in = this, out = this
                 for input_idx in 0..(frame_size - w_len) {
                     let sample_in = input[input_idx];
                     if sample_in != 0.0 {
@@ -182,13 +182,12 @@ impl Effect for FIRFilter {
                         }
                     }
                 }
-            }
-            // in = this, out = this + next
-            for s in buffer.iter_mut() {
-                // zero out inter-frame buffer.
-                *s = 0.0;
-            }
-            if (frame_size > w_len) {
+
+                // in = this, out = this + next
+                for s in buffer.iter_mut() {
+                    // zero out inter-frame buffer.
+                    *s = 0.0;
+                }
                 for input_idx in (frame_size - w_len)..frame_size {
                     let sample_in = input[input_idx];
                     if sample_in != 0.0 {
@@ -207,6 +206,13 @@ impl Effect for FIRFilter {
                     }
                 }
             }
+        } else {
+            // frame_size < weights.len
+            |input: &[f32],
+             output: &mut [f32],
+             buffer: &mut [f32],
+             weights: &[f32],
+             frame_size: usize| {}
         };
 
         if let Some(input_l) = input_l {
