@@ -178,7 +178,7 @@ impl Effect for FIRFilter {
                         for (output_idx, weight) in
                             (input_idx..input_idx + w_len).zip(weights.iter())
                         {
-                            output[output_idx] += weight;
+                            output[output_idx] += sample_in * weight;
                         }
                     }
                 }
