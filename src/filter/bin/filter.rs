@@ -21,6 +21,7 @@ pub struct FIRFilter {
     filter_type: FilterType,
     sample_rate: f32,
     len: usize,
+    frame_size: usize,
 }
 
 impl FIRFilter {
@@ -111,6 +112,10 @@ impl FIRFilter {
             println!("{}", sample);
         }
     }
+
+    pub fn set_frame_size(&mut self, new_frame_size: usize) {
+        self.frame_size = new_frame_size;
+    }
 }
 
 impl Effect for FIRFilter {
@@ -125,6 +130,7 @@ impl Effect for FIRFilter {
             filter_type: FilterType::None,
             sample_rate: 48000.0,
             len: 1024,
+            frame_size: 2048,
         }
     }
     fn name(&self) -> &'static str {
@@ -153,10 +159,10 @@ impl Effect for FIRFilter {
         let convolution_fct = |input: &[f32],
                                output: &mut [f32],
                                buffer: &mut [f32],
-                               weights: &[f32]| {
+                               weights: &[f32],
+                               frame_size: usize| {
             assert!(input.len() == output.len());
             let w_len = weights.len();
-            let i_len = input.len();
 
             // convolution
             //in = prev, out = this
@@ -165,11 +171,15 @@ impl Effect for FIRFilter {
             }
 
             // in = this, out = this
-            for input_idx in 0..(i_len - w_len) {
-                let sample_in = input[input_idx];
-                if sample_in != 0.0 {
-                    for (output_idx, weight) in (input_idx..input_idx + w_len).zip(weights.iter()) {
-                        output[output_idx] += weight;
+            if (frame_size > w_len) {
+                for input_idx in 0..(frame_size - w_len) {
+                    let sample_in = input[input_idx];
+                    if sample_in != 0.0 {
+                        for (output_idx, weight) in
+                            (input_idx..input_idx + w_len).zip(weights.iter())
+                        {
+                            output[output_idx] += weight;
+                        }
                     }
                 }
             }
@@ -178,20 +188,22 @@ impl Effect for FIRFilter {
                 // zero out inter-frame buffer.
                 *s = 0.0;
             }
-            for input_idx in (i_len - w_len)..i_len {
-                let sample_in = input[input_idx];
-                if sample_in != 0.0 {
-                    let mut idx = 0;
+            if (frame_size > w_len) {
+                for input_idx in (frame_size - w_len)..frame_size {
+                    let sample_in = input[input_idx];
+                    if sample_in != 0.0 {
+                        let mut idx = 0;
 
-                    // first add into this frame
-                    while idx < (i_len - input_idx) {
-                        output[input_idx + idx] += sample_in * weights[idx];
-                        idx += 1;
-                    }
-                    // then add into the next frame with help of the inter-frame buffer
-                    while idx < w_len {
-                        buffer[idx - (i_len - input_idx)] += sample_in * weights[idx];
-                        idx += 1;
+                        // first add into this frame
+                        while idx < (frame_size - input_idx) {
+                            output[input_idx + idx] += sample_in * weights[idx];
+                            idx += 1;
+                        }
+                        // then add into the next frame with help of the inter-frame buffer
+                        while idx < w_len {
+                            buffer[idx - (frame_size - input_idx)] += sample_in * weights[idx];
+                            idx += 1;
+                        }
                     }
                 }
             }
@@ -199,12 +211,24 @@ impl Effect for FIRFilter {
 
         if let Some(input_l) = input_l {
             if let Some(output_l) = output_l {
-                convolution_fct(input_l, output_l, &mut self.buffer_l, &self.weights);
+                convolution_fct(
+                    input_l,
+                    output_l,
+                    &mut self.buffer_l,
+                    &self.weights,
+                    self.frame_size,
+                );
             }
         }
         if let Some(input_r) = input_r {
             if let Some(output_r) = output_r {
-                convolution_fct(input_r, output_r, &mut self.buffer_r, &self.weights);
+                convolution_fct(
+                    input_r,
+                    output_r,
+                    &mut self.buffer_r,
+                    &self.weights,
+                    self.frame_size,
+                );
             }
         }
     }

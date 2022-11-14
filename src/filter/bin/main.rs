@@ -53,6 +53,23 @@ fn main() {
         FIRFilter::new()
     };
 
-    my_fir_filter.process_samples(Some(&input_data), None, Some(&mut values_data), None);
+    let mut start_index: usize = 0;
+    while start_index + 2048 < num_samples {
+        my_fir_filter.process_samples(
+            Some(&input_data[start_index..start_index + 2048]),
+            None,
+            Some(&mut values_data[start_index..start_index + 2048]),
+            None,
+        );
+        start_index += 2048;
+    }
+    let rest: usize = num_samples - start_index;
+    my_fir_filter.set_frame_size(rest);
+    my_fir_filter.process_samples(
+        Some(&input_data[start_index..start_index + rest]),
+        None,
+        Some(&mut values_data[start_index..start_index + rest]),
+        None,
+    );
     write_data(&values_data, num_samples);
 }
