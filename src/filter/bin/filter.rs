@@ -17,6 +17,12 @@ pub struct FIRFilter {
     weights_original: Vec<f32>,
     buffer_l: Vec<f32>,
     buffer_r: Vec<f32>,
+    in_buffer_l: Vec<f32>,
+    in_buffer_r: Vec<f32>,
+    in_buffer_l_i_idx: usize,
+    in_buffer_l_o_idx: usize,
+    in_buffer_r_i_idx: usize,
+    in_buffer_r_o_idx: usize,
     gain: f32,
     filter_type: FilterType,
     sample_rate: f32,
@@ -25,8 +31,9 @@ pub struct FIRFilter {
 }
 
 impl FIRFilter {
-    pub fn low_pass(cutoff: f32, filter_len: usize) -> Self {
+    pub fn low_pass(cutoff: f32, filter_len: usize, frame_size: usize) -> Self {
         let mut new_lp_filter = FIRFilter::new();
+        new_lp_filter.set_frame_size(frame_size);
         let len = if new_lp_filter.len % 2 == 0 {
             new_lp_filter.len + 1
         } else {
@@ -37,6 +44,15 @@ impl FIRFilter {
         new_lp_filter.weights = vec![0.0; len];
         new_lp_filter.buffer_l = vec![0.0; len];
         new_lp_filter.buffer_r = vec![0.0; len];
+        if new_lp_filter.len > new_lp_filter.frame_size {
+            new_lp_filter.in_buffer_l = vec![0.0; len - frame_size];
+            new_lp_filter.in_buffer_r = vec![0.0; len - frame_size];
+            new_lp_filter.in_buffer_l_i_idx = 0;
+            new_lp_filter.in_buffer_l_o_idx = 0;
+            new_lp_filter.in_buffer_r_i_idx = 0;
+            new_lp_filter.in_buffer_r_o_idx = 0;
+        }
+
         let angular_cutoff = (2.0 * PI * cutoff) / new_lp_filter.sample_rate;
 
         let middle = (len / 2) as isize; // should be odd
@@ -50,8 +66,14 @@ impl FIRFilter {
         new_lp_filter
     }
 
-    pub fn band_pass(low_cutoff: f32, high_cutoff: f32, filter_len: usize) -> Self {
+    pub fn band_pass(
+        low_cutoff: f32,
+        high_cutoff: f32,
+        filter_len: usize,
+        frame_size: usize,
+    ) -> Self {
         let mut new_bp_filter = FIRFilter::new();
+        new_bp_filter.set_frame_size(frame_size);
         let len = if new_bp_filter.len % 2 == 0 {
             new_bp_filter.len + 1
         } else {
@@ -62,6 +84,14 @@ impl FIRFilter {
         new_bp_filter.weights = vec![0.0; len];
         new_bp_filter.buffer_l = vec![0.0; len];
         new_bp_filter.buffer_r = vec![0.0; len];
+        if new_bp_filter.len > new_bp_filter.frame_size {
+            new_bp_filter.in_buffer_l = vec![0.0; len - frame_size];
+            new_bp_filter.in_buffer_r = vec![0.0; len - frame_size];
+            new_bp_filter.in_buffer_l_i_idx = 0;
+            new_bp_filter.in_buffer_l_o_idx = 0;
+            new_bp_filter.in_buffer_r_i_idx = 0;
+            new_bp_filter.in_buffer_r_o_idx = 0;
+        }
 
         let angular_low_cutoff = (2.0 * PI * low_cutoff) / new_bp_filter.sample_rate;
         let angular_high_cutoff = (2.0 * PI * high_cutoff) / new_bp_filter.sample_rate;
@@ -80,8 +110,9 @@ impl FIRFilter {
         new_bp_filter
     }
 
-    pub fn high_pass(cutoff: f32, filter_len: usize) -> Self {
+    pub fn high_pass(cutoff: f32, filter_len: usize, frame_size: usize) -> Self {
         let mut new_hp_filter = FIRFilter::new();
+        new_hp_filter.set_frame_size(frame_size);
         let len = if new_hp_filter.len % 2 == 0 {
             new_hp_filter.len + 1
         } else {
@@ -92,6 +123,14 @@ impl FIRFilter {
         new_hp_filter.weights = vec![0.0; len];
         new_hp_filter.buffer_l = vec![0.0; len];
         new_hp_filter.buffer_r = vec![0.0; len];
+        if new_hp_filter.len > new_hp_filter.frame_size {
+            new_hp_filter.in_buffer_l = vec![0.0; len - frame_size];
+            new_hp_filter.in_buffer_r = vec![0.0; len - frame_size];
+            new_hp_filter.in_buffer_l_i_idx = 0;
+            new_hp_filter.in_buffer_l_o_idx = 0;
+            new_hp_filter.in_buffer_r_i_idx = 0;
+            new_hp_filter.in_buffer_r_o_idx = 0;
+        }
 
         let angular_cutoff = (2.0 * PI * cutoff) / new_hp_filter.sample_rate;
 
@@ -126,6 +165,13 @@ impl Effect for FIRFilter {
             weights_original: Vec::new(),
             buffer_l: Vec::new(),
             buffer_r: Vec::new(),
+            in_buffer_l: Vec::new(),
+            in_buffer_r: Vec::new(),
+            in_buffer_l_i_idx: 0,
+            in_buffer_l_o_idx: 0,
+            in_buffer_r_i_idx: 0,
+            in_buffer_r_o_idx: 0,
+
             gain: 1.0,
             filter_type: FilterType::None,
             sample_rate: 48000.0,
