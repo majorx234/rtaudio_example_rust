@@ -53,3 +53,4 @@ scan_fmt = "0.2.6"
 dsp = "0.10.2"
 plotly = {version = "0.8.2"}
 plotters = {version = "0.3.4"}
+plotters-bitmap = "0.3.2"
