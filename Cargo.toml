@@ -42,9 +42,14 @@ path = "src/filter/bin/filter_test.rs"
 name = "plot_wave"
 path = "src/plot_wave/bin/main.rs"
 
+[[bin]]
+name = "plotters_wave"
+path = "src/plotters_wave/bin/main.rs"
+
 
 [dependencies]
 rodio = "0.14.0"
 scan_fmt = "0.2.6"
 dsp = "0.10.2"
 plotly = {version = "0.8.2"}
+plotters = {version = "0.3.4"}
