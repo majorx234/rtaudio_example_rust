@@ -76,20 +76,22 @@ impl Effect for Overdrive {
             unsymetrical_softclip
         };
 
-        if let Some(input_l) = input_l {
-            if let Some(output_l) = output_l {
-                for (index, xl) in input_l.iter().enumerate() {
-                    output_l[index] = softclip(*xl);
+        let process_overdrive_on_slice = |input: Option<&[f32]>, output: Option<&mut [f32]>| {
+            if let Some(input) = input {
+                if let Some(output) = output {
+                    for (index, xl) in input.iter().enumerate() {
+                        output[index] = softclip(*xl);
+                    }
+                    if self.symetrical == false {
+                        let average = output.iter().sum::<f32>() / (output.len() as f32);
+                        output.iter_mut().for_each(|x| *x -= average);
+                    }
                 }
             }
-        }
-        if let Some(input_r) = input_r {
-            if let Some(output_r) = output_r {
-                for (index, xr) in input_r.iter().enumerate() {
-                    output_r[index] = softclip(*xr);
-                }
-            }
-        }
+        };
+
+        process_overdrive_on_slice(input_l, output_l);
+        process_overdrive_on_slice(input_r, output_r);
     }
     fn bypass(&mut self) {
         self.bypassing = !self.bypassing;
