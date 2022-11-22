@@ -1,5 +1,5 @@
 #[macro_use]
-extern crate scan_fmt;
+use scan_fmt::scan_fmt;
 pub mod effect;
 
 pub fn read_data() -> (usize, std::vec::Vec<f32>) {

@@ -1,5 +1,4 @@
 #[macro_use]
-extern crate scan_fmt;
 use rodio;
 use rodio::buffer::SamplesBuffer;
 use rodio::Sink;

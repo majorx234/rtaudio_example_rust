@@ -1,5 +1,3 @@
-extern crate scan_fmt;
-
 use rtaudio_lib::effect::Effect;
 use rtaudio_lib::read_data;
 use rtaudio_lib::write_data;
