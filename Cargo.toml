@@ -25,6 +25,10 @@ path = "src/play_wave/bin/main.rs"
 name = "overdrive"
 path = "src/overdrive/bin/main.rs"
 
+[[bin]]
+name = "overdrive_unsymetric"
+path = "src/overdrive/bin/main_unsymetric.rs"
+
 
 [[bin]]
 name = "delay"
@@ -54,3 +58,5 @@ dsp = "0.10.2"
 plotly = {version = "0.8.2"}
 plotters = {version = "0.3.4"}
 plotters-bitmap = "0.3.2"
+eframe = { version = "0.18.0"}
+egui_extras = { version = "0.19.0", features = ["image",]}
