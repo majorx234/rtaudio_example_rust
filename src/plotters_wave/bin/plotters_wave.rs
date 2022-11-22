@@ -1,3 +1,4 @@
+use egui_extras::RetainedImage;
 use plotters::prelude::*;
 use plotters::style::Color;
 use plotters_bitmap::bitmap_pixel::RGBPixel;
@@ -14,9 +15,8 @@ pub fn plot(values_data: &[f32], size: usize) -> Result<(), Box<dyn Error>> {
         .collect();
     //    print!("{:?}", data);
     let mut buf = vec![0u8; WIDTH * HEIGHT * 3];
-    let root =
-        BitMapBackend::<RGBPixel>::with_buffer_and_format(&mut buf, (WIDTH as u32, HEIGHT as u32))?
-            .into_drawing_area();
+    let root = BitMapBackend::<RGBPixel>::with_buffer(&mut buf, (WIDTH as u32, HEIGHT as u32))
+        .into_drawing_area();
     root.fill(&BLACK)?;
 
     let mut chart = ChartBuilder::on(&root)
@@ -28,5 +28,7 @@ pub fn plot(values_data: &[f32], size: usize) -> Result<(), Box<dyn Error>> {
 
     chart.configure_mesh().draw()?;
     chart.draw_series(LineSeries::new(data, &RED)).unwrap();
+    // let image = RetainedImage::from_image_bytes("test", &buf)?;
+    // ToDo: return image here, check for lifetime and 2nd borrow
     Ok(())
 }
