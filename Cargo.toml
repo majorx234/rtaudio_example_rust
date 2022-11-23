@@ -54,7 +54,6 @@ path = "src/plotters_wave/bin/main.rs"
 name = "spectrogram"
 path = "src/spectrogram/bin/main.rs"
 
-
 [dependencies]
 rodio = "0.14.0"
 scan_fmt = "0.2.6"
@@ -64,3 +63,7 @@ plotters = {version = "0.3.4"}
 plotters-bitmap = "0.3.2"
 eframe = { version = "0.18.0"}
 egui_extras = { version = "0.19.0", features = ["image",]}
+rustfft = {version = "6.1.0"}
+num = {version = "0.4.0"}
+apodize = {version = "1.0.0"}
+strider = {version = "0.1.3"}

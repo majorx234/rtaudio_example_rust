@@ -54,3 +54,5 @@
   - taken idea for effect trait and code for overdrive
 - https://github.com/tsoding/haskell-music
   - thx to tsoding for inspiration of building a cool synth
+- https://github.com/snd/stft
+  - used Miles Steele's implementation of stft

@@ -1,3 +1,5 @@
+use crate::stft::{WindowType, STFT};
+use dsp::spectrum;
 use plotly::{
     common::{Anchor, ColorScalePalette, Visible},
     layout::{
@@ -6,16 +8,53 @@ use plotly::{
     },
     Bar, HeatMap, Layout, Plot,
 };
+use std::fmt::Debug;
+
+pub fn calc_stft(all_samples: &[f32], num_samples: usize) -> Vec<Vec<f32>> {
+    let mut spectrogram: Vec<Vec<f32>> = Vec::new();
+    let sample_rate: usize = 48000;
+
+    // let's initialize our short-time fourier transform
+    let window_type: WindowType = WindowType::Hanning;
+    let window_size: usize = 1024;
+    let step_size: usize = 512;
+    let mut stft = STFT::<f32>::new(window_type, window_size, step_size);
+    let mut spectrogram_column: Vec<f32> = std::iter::repeat(0.).take(stft.output_size()).collect();
+    // iterate over all the samples in chunks of 3000 samples.
+    // in a real program you would probably read from something instead.
+    for some_samples in (&all_samples[..]).chunks(3000) {
+        // append the samples to the internal ringbuffer of the stft
+        stft.append_samples(some_samples);
+        // as long as there remain window_size samples in the internal
+        // ringbuffer of the stft
+        while stft.contains_enough_to_compute() {
+            // compute one column of the stft by
+            // taking the first window_size samples of the internal ringbuffer,
+            // multiplying them with the window,
+            // computing the fast fourier transform,
+            // taking half of the symetric complex outputs,
+            // computing the norm of the complex outputs and
+            // taking the log10
+            stft.compute_column(&mut spectrogram_column[..]);
+            // here's where you would do something with the
+            // spectrogram_column...
+            // drop step_size samples from the internal ringbuffer of the stft
+            // making a step of size step_size
+            spectrogram.push(spectrogram_column.clone());
+            stft.move_to_next_column();
+        }
+    }
+    spectrogram
+}
 
 /// Display a heat map, with buttons to allow for toggling of different
 /// colorscales.
-pub fn heat_map_with_modifiable_colorscale() {
-    type HeatMapType = HeatMap<f64, f64, Vec<f64>>;
-    let gauss = |v: i32| (-v as f64 * v as f64 / 200.0).exp();
-    let z = (-30..30)
-        .map(|x| (-30..30).map(|y| gauss(x) * gauss(y)).collect())
-        .collect();
-    let trace = HeatMapType::new_z(z).color_scale(ColorScalePalette::Viridis.into());
+/// * `spectrum` is a slice of slice
+pub fn heat_map_with_modifiable_colorscale(spectrogram: Vec<Vec<f32>>) {
+    type HeatMapType = HeatMap<f64, f64, Vec<f32>>;
+    let trace = HeatMapType::new_z(spectrogram)
+        .transpose(true)
+        .color_scale(ColorScalePalette::Viridis.into());
     let mut plot = Plot::new();
     plot.add_trace(trace);
 
