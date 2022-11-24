@@ -14,12 +14,14 @@
   - `./gen_wave sine 440.0 0.5` -creates a sine wave with 440hz for 0.5 seconds
   - `./gen_wave tri 880.0 1.0` -creates a triangle wave with 880hz for 1 seconds
 - adsr: pipe into `./adsr_modificator`
+- delay: simple delay (parameters delay time is 500ms, feedback is 0.33, both are hardcoded for now)
 - overdrive: pipe into `./overdrive`
 - overdrive_unsymetric: pipe into `./overdrive_unsymetric`
 - WIP: filter
 - sinks:
   - `play_wave`
   - `plot_wave` plot with help of plotly to html/svg (opens in browser)
+  - `spectrogram` generate a plot of frequency development over time
 ## examples:
 - play a wav
 ```bash
@@ -44,6 +46,7 @@
 
 ## ToDo
 - fix Filter
+- make delay parameters adjustable
 - play Sandstorm
 
 ## Links
@@ -51,8 +54,8 @@
   - taken idea for filter design
 - https://github.com/Bujiraso/rickyhan.com-guitar-effects-in-rust
 - https://github.com/0b01/rasta
-  - taken idea for effect trait and code for overdrive
+  - taken idea for effect trait and code for overdrive, delay
 - https://github.com/tsoding/haskell-music
   - thx to tsoding for inspiration of building a cool synth
 - https://github.com/snd/stft
-  - used Miles Steele's implementation of stft
+  - using the implementation of stft (updated to newer rustfft api)
