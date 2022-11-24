@@ -252,6 +252,7 @@ where
         // copy windowed real_input as real parts into complex_input
         for (dst, src) in self.complex_input.iter_mut().zip(self.real_input.iter()) {
             dst.re = src.clone();
+            dst.im = T::zero();
         }
 
         // compute fft

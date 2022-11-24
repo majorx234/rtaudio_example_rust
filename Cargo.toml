@@ -54,6 +54,11 @@ path = "src/plotters_wave/bin/main.rs"
 name = "spectrogram"
 path = "src/spectrogram/bin/main.rs"
 
+[[bin]]
+name = "spectrogram_test"
+path = "src/spectrogram/bin/spectrogram_test.rs"
+
+
 [dependencies]
 rodio = "0.14.0"
 scan_fmt = "0.2.6"
