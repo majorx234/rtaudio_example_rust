@@ -17,7 +17,7 @@ pub struct Delay {
 impl Delay {
     pub fn set_delay(&mut self, t_in_sec: f32) {
         let delay_time = self.sample_rate * t_in_sec;
-        self.delay_time = self.delay_time.min(delay_time as usize);
+        self.delay_time = (delay_time as usize);
     }
 
     pub fn set_feedback(&mut self, amount: f32) {
@@ -39,7 +39,7 @@ impl Effect for Delay {
             delay_buffer_l_o_idx: 0,
             delay_buffer_r_i_idx: 0,
             delay_buffer_r_o_idx: 0,
-            delay_time: 500,
+            delay_time: 5000,
             feedback: 0.33,
             sample_rate: 48000.0,
             frame_size: 1024,
