@@ -5,11 +5,10 @@ to use add `stft = "*"`
 to the `[dependencies]` section of your `Cargo.toml` and call `extern crate stft;` in your code.
 ## example
 ```
-extern crate stft;
 use stft::{STFT, WindowType};
 fn main() {
     // let's generate ten seconds of fake audio
-    let sample_rate: usize = 44100;
+    let sample_rate: usize = 48000;
     let seconds: usize = 10;
     let sample_count = sample_rate * seconds;
     let all_samples = (0..sample_count).map(|x| x as f64).collect::<Vec<f64>>();
@@ -19,8 +18,9 @@ fn main() {
     let step_size: usize = 512;
     let mut stft = STFT::new(window_type, window_size, step_size);
     // we need a buffer to hold a computed column of the spectrogram
-    let mut spectrogram_column: Vec<f64> =
-        std::iter::repeat(0.).take(stft.output_size()).collect();
+    let mut spectrogram_column: Vec<f64> = std::iter::repeat(0.).take(stft.output_size()).collect();
+    // let's have a vector to store all columns
+    let mut spectrogram: Vec<Vec<f64>> = Vec::new();
     // iterate over all the samples in chunks of 3000 samples.
     // in a real program you would probably read from something instead.
     for some_samples in (&all_samples[..]).chunks(3000) {
@@ -41,6 +41,7 @@ fn main() {
             // spectrogram_column...
             // drop step_size samples from the internal ringbuffer of the stft
             // making a step of size step_size
+            spectrogram.push(spectrogram_column.clone());
             stft.move_to_next_column();
         }
     }
@@ -197,7 +198,7 @@ where
             FftDirection::Forward
         };
         let fft = planner.plan_fft(window_size, fft_dir);
-        let scratch_size = fft.get_outofplace_scratch_len();
+        let scratch_size = fft.get_inplace_scratch_len();
         STFT {
             window_size: window_size,
             step_size: step_size,
@@ -256,11 +257,8 @@ where
         }
 
         // compute fft
-        self.fft.process_outofplace_with_scratch(
-            &mut self.complex_input,
-            &mut self.complex_output,
-            &mut self.scratch_space,
-        );
+        self.fft
+            .process_with_scratch(&mut self.complex_input, &mut self.scratch_space);
     }
 
     /// # Panics
@@ -270,7 +268,8 @@ where
 
         self.compute_into_complex_output();
 
-        for (dst, src) in output.iter_mut().zip(self.complex_output.iter()) {
+        // copy inplace result of fft to output
+        for (dst, src) in output.iter_mut().zip(self.complex_input.iter()) {
             *dst = src.clone();
         }
     }
@@ -282,7 +281,8 @@ where
 
         self.compute_into_complex_output();
 
-        for (dst, src) in output.iter_mut().zip(self.complex_output.iter()) {
+        // copy inplace result of fft to output
+        for (dst, src) in output.iter_mut().zip(self.complex_input.iter()) {
             *dst = src.norm();
         }
     }
@@ -295,7 +295,8 @@ where
 
         self.compute_into_complex_output();
 
-        for (dst, src) in output.iter_mut().zip(self.complex_output.iter()) {
+        // copy inplace result of fft to output
+        for (dst, src) in output.iter_mut().zip(self.complex_input.iter()) {
             *dst = log10_positive(src.norm());
         }
     }
