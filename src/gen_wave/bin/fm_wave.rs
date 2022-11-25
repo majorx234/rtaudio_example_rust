@@ -13,20 +13,21 @@ pub struct FMWave {
 impl FMWave {
     pub fn new(freq: u32, num_samples: usize, freq_mod: f32) -> FMWave {
         let fsample_rate: f32 = 48000.0;
-        let ffreq = freq as f32;
-        let shift = |t: f32, fmod: f32, fs: f32| -> f32 {
-            0.11 / fmod * (2.0 * f32::consts::PI * t * fmod / fs).sin()
+        let modulator_hub: f32 = 100.0;
+        let modulator_freq: f32 = freq_mod;
+        let modulator_index: f32 = if freq_mod == 0.0 {
+            0.0
+        } else {
+            freq as f32 / modulator_freq
         };
+        let ffreq = freq as f32;
+        let shift =
+            |t: f32, fmod: f32, fs: f32| -> f32 { (2.0 * f32::consts::PI * t * fmod / fs).cos() };
         let values_data = (0..num_samples)
             .map(|i| {
-                ((2.0
-                    * f32::consts::PI
-                    * ffreq
-                    * (1800.0 / freq_mod)
-                    * (i as f32)
-                    * shift(i as f32, freq_mod, fsample_rate)
-                    / fsample_rate)
-                    .sin())
+                ((2.0 * f32::consts::PI * (ffreq / fsample_rate) * (i as f32)
+                    + modulator_index * shift(i as f32, freq_mod, fsample_rate))
+                .sin())
             })
             .collect();
         return FMWave {
