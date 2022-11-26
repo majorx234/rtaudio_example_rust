@@ -43,10 +43,12 @@
 ```bash
 ./gen_wave sin 240 1.0|./overdrive_unsymetric|./plot_wave
 ```
-
+- get spectrogram of frequency modulation:
+```bash
+./gen_wave fm 4400 1.0|.spectrogram
+```
 ## ToDo
 - fix Filter
-- make delay parameters adjustable
 - play Sandstorm
 
 ## Links
