@@ -21,7 +21,7 @@
 - sinks:
   - `play_wave`
   - `plot_wave` plot with help of plotly to html/svg (opens in browser)
-  - `spectrogram` generate a plot of frequency development over time
+  - `spectrogram 1024 512` generate a plot of frequency development over time (`window_size` = 1024, `step_size` = 512)
 ## examples:
 - play a wav
 ```bash
@@ -45,7 +45,7 @@
 ```
 - get spectrogram of frequency modulation:
 ```bash
-./gen_wave fm 4400 1.0|.spectrogram
+./gen_wave fm 4400 1.0|.spectrogram 1024 512
 ```
 ## ToDo
 - fix Filter

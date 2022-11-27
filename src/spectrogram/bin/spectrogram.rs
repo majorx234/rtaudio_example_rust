@@ -10,14 +10,17 @@ use plotly::{
 };
 use std::fmt::Debug;
 
-pub fn calc_stft(all_samples: &[f32], num_samples: usize) -> Vec<Vec<f32>> {
+pub fn calc_stft(
+    all_samples: &[f32],
+    num_samples: usize,
+    window_size: usize,
+    step_size: usize,
+) -> Vec<Vec<f32>> {
     let mut spectrogram: Vec<Vec<f32>> = Vec::new();
     let sample_rate: usize = 48000;
 
     // let's initialize our short-time fourier transform
     let window_type: WindowType = WindowType::Hanning;
-    let window_size: usize = 1024;
-    let step_size: usize = 512;
     let mut stft = STFT::<f32>::new(window_type, window_size, step_size);
     let mut spectrogram_column: Vec<f32> = std::iter::repeat(0.).take(stft.output_size()).collect();
     // iterate over all the samples in chunks of 3000 samples.

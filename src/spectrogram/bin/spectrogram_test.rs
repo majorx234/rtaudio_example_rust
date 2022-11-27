@@ -7,6 +7,6 @@ mod stft;
 
 fn main() {
     let (num_samples, input_data) = read_data();
-    let spectrogram: Vec<Vec<f32>> = calc_stft(&input_data, num_samples);
+    let spectrogram: Vec<Vec<f32>> = calc_stft(&input_data, num_samples, 1024, 512);
     write_data(&spectrogram[0], spectrogram[0].len());
 }
