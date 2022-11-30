@@ -1,9 +1,8 @@
+use rtaudio_lib::delay::Delay;
 use rtaudio_lib::effect::Effect;
 use rtaudio_lib::read_data;
 use rtaudio_lib::write_data;
 use std::env::args;
-mod delay;
-use delay::Delay;
 
 fn main() {
     let mut argit = args();

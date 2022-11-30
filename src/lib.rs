@@ -1,5 +1,6 @@
 #[macro_use]
 use scan_fmt::scan_fmt;
+pub mod delay;
 pub mod effect;
 pub mod simple_adsr;
 
