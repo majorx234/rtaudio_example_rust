@@ -1,5 +1,5 @@
-use rtaudio_lib::adsr;
 use rtaudio_lib::read_data;
+use rtaudio_lib::simple_adsr as adsr;
 use rtaudio_lib::write_data;
 
 fn main() {
