@@ -1,8 +1,7 @@
 use rtaudio_lib::effect::Effect;
+use rtaudio_lib::overdrive::Overdrive;
 use rtaudio_lib::read_data;
 use rtaudio_lib::write_data;
-mod overdrive;
-use overdrive::Overdrive;
 
 fn main() {
     let (num_samples, input_data) = read_data();

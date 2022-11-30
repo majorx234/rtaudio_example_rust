@@ -1,4 +1,4 @@
-use rtaudio_lib::effect::Effect;
+use crate::effect::Effect;
 
 pub struct Overdrive {
     pub bypassing: bool,

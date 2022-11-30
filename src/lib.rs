@@ -2,6 +2,7 @@
 use scan_fmt::scan_fmt;
 pub mod delay;
 pub mod effect;
+pub mod overdrive;
 pub mod simple_adsr;
 
 pub fn read_data() -> (usize, std::vec::Vec<f32>) {
