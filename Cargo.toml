@@ -47,6 +47,10 @@ name = "plot_wave"
 path = "src/plot_wave/bin/main.rs"
 
 [[bin]]
+name = "plot_advance_wave"
+path = "src/plot_wave/bin/main_advance.rs"
+
+[[bin]]
 name = "plotters_wave"
 path = "src/plotters_wave/bin/main.rs"
 
