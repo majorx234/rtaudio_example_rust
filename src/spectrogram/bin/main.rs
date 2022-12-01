@@ -1,8 +1,7 @@
 use rtaudio_lib::read_data;
+use rtaudio_lib::spectrogram::{calc_stft, heat_map_with_modifiable_colorscale};
+use rtaudio_lib::stft;
 use std::env::args;
-mod spectrogram;
-use spectrogram::{calc_stft, heat_map_with_modifiable_colorscale};
-mod stft;
 
 fn main() {
     let mut argit = args();
