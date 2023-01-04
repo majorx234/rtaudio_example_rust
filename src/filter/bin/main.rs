@@ -54,6 +54,7 @@ fn main() {
     };
 
     let mut start_index: usize = 0;
+    my_fir_filter.set_frame_size(2048);
     while start_index + 2048 < num_samples {
         my_fir_filter.process_samples(
             Some(&input_data[start_index..start_index + 2048]),
