@@ -31,9 +31,10 @@ pub struct FIRFilter {
 }
 
 impl FIRFilter {
-    pub fn low_pass(cutoff: f32, filter_len: usize, frame_size: usize) -> Self {
+    pub fn low_pass(cutoff: f32, filter_len: usize, frame_size: usize, sample_rate: f32) -> Self {
         let mut new_lp_filter = FIRFilter::new();
         new_lp_filter.set_frame_size(frame_size);
+        new_lp_filter.set_sample_rate(sample_rate);
         let len = if new_lp_filter.len % 2 == 0 {
             new_lp_filter.len + 1
         } else {
@@ -71,9 +72,11 @@ impl FIRFilter {
         high_cutoff: f32,
         filter_len: usize,
         frame_size: usize,
+        sample_rate: f32,
     ) -> Self {
         let mut new_bp_filter = FIRFilter::new();
         new_bp_filter.set_frame_size(frame_size);
+        new_bp_filter.set_sample_rate(sample_rate);
         let len = if new_bp_filter.len % 2 == 0 {
             new_bp_filter.len + 1
         } else {
@@ -110,8 +113,9 @@ impl FIRFilter {
         new_bp_filter
     }
 
-    pub fn high_pass(cutoff: f32, filter_len: usize, frame_size: usize) -> Self {
+    pub fn high_pass(cutoff: f32, filter_len: usize, frame_size: usize, sample_rate: f32) -> Self {
         let mut new_hp_filter = FIRFilter::new();
+        new_hp_filter.set_sample_rate(sample_rate);
         new_hp_filter.set_frame_size(frame_size);
         let len = if new_hp_filter.len % 2 == 0 {
             new_hp_filter.len + 1
@@ -154,6 +158,10 @@ impl FIRFilter {
 
     pub fn set_frame_size(&mut self, new_frame_size: usize) {
         self.frame_size = new_frame_size;
+    }
+
+    pub fn set_sample_rate(&mut self, new_sample_rate: f32) {
+        self.sample_rate = new_sample_rate;
     }
 }
 

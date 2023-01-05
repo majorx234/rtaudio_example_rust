@@ -1,5 +1,5 @@
 //use eframe::egui::{LayerId, Layout};
-use plotly::common::{Mode, Title};
+use plotly::common::Title;
 use plotly::layout::{Axis, RangeSlider};
 use plotly::{Layout, Plot, Scatter};
 

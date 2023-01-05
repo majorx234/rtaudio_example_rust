@@ -1,6 +1,5 @@
 use rtaudio_lib::read_data;
 use rtaudio_lib::spectrogram::{calc_stft, heat_map_with_modifiable_colorscale};
-use rtaudio_lib::stft;
 use std::env::args;
 
 fn main() {
@@ -28,9 +27,9 @@ fn main() {
         panic!("No step_size argument given");
     };
 
-    let (num_samples, input_data) = read_data();
+    let (_, input_data) = read_data();
 
-    let spectrogram: Vec<Vec<f32>> = calc_stft(&input_data, num_samples, window_size, step_size);
+    let spectrogram: Vec<Vec<f32>> = calc_stft(&input_data, window_size, step_size);
     print!(
         "spec len: {}, spec[0].len: {}",
         spectrogram.len(),

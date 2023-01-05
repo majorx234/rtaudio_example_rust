@@ -19,7 +19,7 @@ pub fn generate_adsr_modificator(size: usize, ta: f32, td: f32, ts: f32, tr: f32
         let s: f32 = 1.0 - (0.7 * ((j % max_decay) as f32) / fmax_decay);
         values_data.push(s);
     }
-    for n in (max_attack + max_decay)..(max_attack + max_decay + max_sustain) {
+    for _ in (max_attack + max_decay)..(max_attack + max_decay + max_sustain) {
         values_data.push(0.3);
     }
     for n in (max_attack + max_decay + max_sustain)..(size as u32) {

@@ -44,11 +44,17 @@ fn main() {
     let frame_size: usize = 1024;
 
     let mut my_fir_filter = if filter_form.eq("lp") {
-        FIRFilter::low_pass(cutoff_freq1, filter_len, frame_size)
+        FIRFilter::low_pass(cutoff_freq1, filter_len, frame_size, fsample_rate)
     } else if filter_form.eq("bp") {
-        FIRFilter::band_pass(cutoff_freq1, cutoff_freq2, filter_len, frame_size)
+        FIRFilter::band_pass(
+            cutoff_freq1,
+            cutoff_freq2,
+            filter_len,
+            frame_size,
+            fsample_rate,
+        )
     } else if filter_form.eq("hp") {
-        FIRFilter::high_pass(cutoff_freq1, filter_len, frame_size)
+        FIRFilter::high_pass(cutoff_freq1, filter_len, frame_size, fsample_rate)
     } else {
         FIRFilter::new()
     };

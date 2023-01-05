@@ -1,6 +1,4 @@
-use egui_extras::RetainedImage;
 use plotters::prelude::*;
-use plotters::style::Color;
 use plotters_bitmap::bitmap_pixel::RGBPixel;
 use plotters_bitmap::BitMapBackend;
 use std::error::Error;

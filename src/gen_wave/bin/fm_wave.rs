@@ -25,9 +25,8 @@ impl FMWave {
             |t: f32, fmod: f32, fs: f32| -> f32 { (2.0 * f32::consts::PI * t * fmod / fs).cos() };
         let values_data = (0..num_samples)
             .map(|i| {
-                ((2.0 * f32::consts::PI * (ffreq / fsample_rate) * (i as f32)
-                    + modulator_index * shift(i as f32, freq_mod, fsample_rate))
-                .sin())
+                2.0 * f32::consts::PI * (ffreq / fsample_rate) * (i as f32)
+                    + modulator_index * shift(i as f32, freq_mod, fsample_rate).sin()
             })
             .collect();
         return FMWave {

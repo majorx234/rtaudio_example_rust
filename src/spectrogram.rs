@@ -1,23 +1,12 @@
 use crate::stft::{WindowType, STFT};
-use dsp::spectrum;
 use plotly::{
-    common::{Anchor, ColorScalePalette, Visible},
-    layout::{
-        update_menu::{ButtonBuilder, UpdateMenu, UpdateMenuDirection, UpdateMenuType},
-        BarMode,
-    },
-    Bar, HeatMap, Layout, Plot,
+    common::ColorScalePalette,
+    layout::update_menu::{ButtonBuilder, UpdateMenu, UpdateMenuType},
+    HeatMap, Layout, Plot,
 };
-use std::fmt::Debug;
 
-pub fn calc_stft(
-    all_samples: &[f32],
-    num_samples: usize,
-    window_size: usize,
-    step_size: usize,
-) -> Vec<Vec<f32>> {
+pub fn calc_stft(all_samples: &[f32], window_size: usize, step_size: usize) -> Vec<Vec<f32>> {
     let mut spectrogram: Vec<Vec<f32>> = Vec::new();
-    let sample_rate: usize = 48000;
 
     // let's initialize our short-time fourier transform
     let window_type: WindowType = WindowType::Hanning;

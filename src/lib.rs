@@ -1,4 +1,3 @@
-#[macro_use]
 use scan_fmt::scan_fmt;
 use std::io::BufRead;
 pub mod delay;
@@ -9,12 +8,11 @@ pub mod spectrogram;
 pub mod stft;
 
 pub fn read_data() -> (usize, std::vec::Vec<f32>) {
-    let mut line = String::new();
-    let line_size = std::io::stdin().read_line(&mut line).unwrap();
+    let line = String::new();
     let num_samples_raw = scan_fmt!(&line, "{}\n", usize);
     let num_samples: usize = num_samples_raw.unwrap();
 
-    let mut values_data = std::io::stdin()
+    let values_data = std::io::stdin()
         .lock()
         .lines()
         .map(|x| x.expect("0.0").parse::<f32>().unwrap())

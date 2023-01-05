@@ -17,7 +17,7 @@ pub struct Delay {
 impl Delay {
     pub fn set_delay(&mut self, t_in_sec: f32) {
         let delay_time = self.sample_rate * t_in_sec;
-        self.delay_time = (delay_time as usize);
+        self.delay_time = delay_time as usize;
     }
 
     pub fn set_feedback(&mut self, amount: f32) {
