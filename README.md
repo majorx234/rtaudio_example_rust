@@ -3,7 +3,7 @@
 - learning Rust & rodio
 - learning audio prgramming 
 
-## Info
+# Info
 - Command Line Synthesizer
 - pipe Data from one exe to another
 - build with cargo:```cargo build```
@@ -23,18 +23,18 @@
   - `play_wave`
   - `plot_wave` plot with help of plotly to html/svg (opens in browser)
   - `spectrogram 1024 512` generate a plot of frequency development over time (`window_size` = 1024, `step_size` = 512)
-## examples:
+# examples:
 - play a wav
 ```bash
 ./gen_wave saw 440 1.0 |./adsr_modificator 0.05 0.2 0.5 0.25|./play_wave
 ```
 - plot a wav via GNU Plot
 ```bash
-./gen_wave sin 440 0.1 |./adsr_modificator 0.05 0.2 0.5 0.25|gnuplot -p -e "set xrange[1:4800]; plot '-' "
+./gen_wave sin 440 0.1 |./adsr_modificator 0.05 0.2 0.5 0.25|gnuplot -p -e "set xrange[0:4800]; plot '-' "
 ```
 - 2nd plot via GNU Plot
 ```bash
-./gen_wave tri 440 0.2|./adsr_modificator 0.05 0.2 0.5 0.25|gnuplot -p -e "set xrange[1:9600]; plot '-' "
+./gen_wave tri 440 0.2|./adsr_modificator 0.05 0.2 0.5 0.25|gnuplot -p -e "set xrange[0:9600]; plot '-' "
 ```
 - play a fm wav
 ```bash
@@ -48,11 +48,13 @@
 ```bash
 ./gen_wave fm 4400 1.0|.spectrogram 1024 512
 ```
-## ToDo
+# ToDo
 - fix Filter
 - play Sandstorm
+- support named pipes/ piping via file descriptors
+- "real time" - sound processing
 
-## Links
+# Links
 - https://github.com/derekdreery/mixjack
   - taken idea for filter design
 - https://github.com/Bujiraso/rickyhan.com-guitar-effects-in-rust
@@ -62,3 +64,7 @@
   - thx to tsoding for inspiration of building a cool synth
 - https://github.com/snd/stft
   - using the implementation of stft (updated to newer rustfft api)
+
+# History
+- 20230107 - Version 1.0.0 
+  - data between nodes are now send without size information (pure samples)
