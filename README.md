@@ -13,7 +13,8 @@
   - `./gen_wave invsaw 2093.0 0.25` -creates a inverted saw wave with 2093hz for 0.25 seconds  
   - `./gen_wave sine 440.0 0.5` -creates a sine wave with 440hz for 0.5 seconds
   - `./gen_wave tri 880.0 1.0` -creates a triangle wave with 880hz for 1 seconds
-- adsr: pipe into `./adsr_modificator`
+- adsr: pipe into `./adsr_modificator 0.05 0.2 0.5 0.25`
+  - 4 paramaters for attack decay sustain and delay nneds to be set
 - delay: simple delay (parameters delay time is 500ms, feedback is 0.33, both are hardcoded for now)
 - overdrive: pipe into `./overdrive`
 - overdrive_unsymetric: pipe into `./overdrive_unsymetric`
@@ -25,19 +26,19 @@
 ## examples:
 - play a wav
 ```bash
-./gen_wave saw 440 1.0 |./adsr_modificator|./play_wave
+./gen_wave saw 440 1.0 |./adsr_modificator 0.05 0.2 0.5 0.25|./play_wave
 ```
 - plot a wav via GNU Plot
 ```bash
-./gen_wave sin 440 0.1 |./adsr_modificator|gnuplot -p -e "set xrange[1:4800]; plot '-' "
+./gen_wave sin 440 0.1 |./adsr_modificator 0.05 0.2 0.5 0.25|gnuplot -p -e "set xrange[1:4800]; plot '-' "
 ```
 - 2nd plot via GNU Plot
 ```bash
-./gen_wave tri 440 0.2|./adsr_modificator|gnuplot -p -e "set xrange[1:9600]; plot '-' "
+./gen_wave tri 440 0.2|./adsr_modificator 0.05 0.2 0.5 0.25|gnuplot -p -e "set xrange[1:9600]; plot '-' "
 ```
 - play a fm wav
 ```bash
-./gen_wave fm 50 6.0 |./adsr_modificator|./play_wave
+./gen_wave fm 50 6.0 |./adsr_modificator 0.05 0.2 0.5 0.25|./play_wave
 ```
 - plot an overdrived wav:
 ```bash
