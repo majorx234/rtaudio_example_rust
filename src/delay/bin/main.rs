@@ -52,5 +52,5 @@ fn main() {
         Some(&mut values_data[start_index..start_index + rest]),
         None,
     );
-    write_data(&values_data, num_samples);
+    write_data(&values_data);
 }

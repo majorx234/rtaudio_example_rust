@@ -33,6 +33,6 @@ impl InvSawWave {
 
 impl Wave for InvSawWave {
     fn print(&self) {
-        write_data(&self.values, self.num_samples);
+        write_data(&self.values);
     }
 }

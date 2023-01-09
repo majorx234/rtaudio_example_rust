@@ -12,12 +12,11 @@ pub fn read_data() -> (usize, std::vec::Vec<f32>) {
         .lines()
         .map(|x| x.expect("0.0").parse::<f32>().unwrap())
         .collect::<Vec<f32>>();
-    let line = String::new();
     let num_samples = values_data.len();
     return (num_samples, values_data);
 }
 
-pub fn write_data(values_data: &Vec<f32>, size: usize) {
+pub fn write_data(values_data: &Vec<f32>) {
     for sample in values_data {
         println!("{}", sample);
     }

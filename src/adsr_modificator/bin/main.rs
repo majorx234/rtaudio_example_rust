@@ -54,5 +54,5 @@ fn main() {
     let adsr_modificator: Vec<f32> =
         adsr::generate_adsr_modificator(size, attack, decay, sustain, release);
     let values_data: Vec<f32> = adsr::adsr_multiplication(adsr_modificator, values_data, size);
-    write_data(&values_data, size);
+    write_data(&values_data);
 }

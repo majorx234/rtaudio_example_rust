@@ -9,5 +9,5 @@ fn main() {
     let mut my_overdrive = Overdrive::new();
     my_overdrive.unset_symetrical();
     my_overdrive.process_samples(Some(&input_data), None, Some(&mut values_data), None);
-    write_data(&values_data, num_samples);
+    write_data(&values_data);
 }

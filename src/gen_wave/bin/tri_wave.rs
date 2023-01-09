@@ -31,6 +31,6 @@ impl TriWave {
 
 impl Wave for TriWave {
     fn print(&self) {
-        write_data(&self.values, self.num_samples);
+        write_data(&self.values);
     }
 }
