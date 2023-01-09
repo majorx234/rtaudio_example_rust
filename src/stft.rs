@@ -1,69 +1,11 @@
-/*!
-**computes the [short-time fourier transform](https://en.wikipedia.org/wiki/Short-time_Fourier_transform)
-on streaming data.**
-to use add `stft = "*"`
-to the `[dependencies]` section of your `Cargo.toml` and call `extern crate stft;` in your code.
-## example
-```
-use stft::{STFT, WindowType};
-fn main() {
-    // let's generate ten seconds of fake audio
-    let sample_rate: usize = 48000;
-    let seconds: usize = 10;
-    let sample_count = sample_rate * seconds;
-    let all_samples = (0..sample_count).map(|x| x as f64).collect::<Vec<f64>>();
-    // let's initialize our short-time fourier transform
-    let window_type: WindowType = WindowType::Hanning;
-    let window_size: usize = 1024;
-    let step_size: usize = 512;
-    let mut stft = STFT::new(window_type, window_size, step_size);
-    // we need a buffer to hold a computed column of the spectrogram
-    let mut spectrogram_column: Vec<f64> = std::iter::repeat(0.).take(stft.output_size()).collect();
-    // let's have a vector to store all columns
-    let mut spectrogram: Vec<Vec<f64>> = Vec::new();
-    // iterate over all the samples in chunks of 3000 samples.
-    // in a real program you would probably read from something instead.
-    for some_samples in (&all_samples[..]).chunks(3000) {
-        // append the samples to the internal ringbuffer of the stft
-        stft.append_samples(some_samples);
-        // as long as there remain window_size samples in the internal
-        // ringbuffer of the stft
-        while stft.contains_enough_to_compute() {
-            // compute one column of the stft by
-            // taking the first window_size samples of the internal ringbuffer,
-            // multiplying them with the window,
-            // computing the fast fourier transform,
-            // taking half of the symetric complex outputs,
-            // computing the norm of the complex outputs and
-            // taking the log10
-            stft.compute_column(&mut spectrogram_column[..]);
-            // here's where you would do something with the
-            // spectrogram_column...
-            // drop step_size samples from the internal ringbuffer of the stft
-            // making a step of size step_size
-            spectrogram.push(spectrogram_column.clone());
-            stft.move_to_next_column();
-        }
-    }
-}
-```
-*/
-
 use apodize;
+use itertools::izip;
 use num::complex::Complex;
 use num::traits::{Float, Signed, Zero};
 use rustfft::{Fft, FftDirection, FftNum, FftPlanner};
 use std::str::FromStr;
 use std::sync::Arc;
-use strider::{SliceRing, SliceRingImpl};
 
-/// returns `0` if `log10(value).is_negative()`.
-/// otherwise returns `log10(value)`.
-/// `log10` turns values in domain `0..1` into values
-/// in range `-inf..0`.
-/// `log10_positive` turns values in domain `0..1` into `0`.
-/// this sets very small values to zero which may not be
-/// what you want depending on your application.
 #[inline]
 pub fn log10_positive<T: Float + Signed + Zero>(value: T) -> T {
     // Float.log10
@@ -134,8 +76,6 @@ where
     pub step_size: usize,
     pub fft: Arc<dyn Fft<T>>,
     pub window: Option<Vec<T>>,
-    /// internal ringbuffer used to store samples
-    pub sample_ring: SliceRingImpl<T>,
     pub real_input: Vec<T>,
     pub complex_input: Vec<Complex<T>>,
     pub complex_output: Vec<Complex<T>>,
@@ -179,7 +119,6 @@ where
         let window = Self::window_type_to_window_vec(window_type, window_size);
         Self::new_with_window_vec(window, window_size, step_size)
     }
-
     // TODO this should ideally take an iterator and not a vec
     pub fn new_with_window_vec(
         window: Option<Vec<T>>,
@@ -203,7 +142,6 @@ where
             window_size: window_size,
             step_size: step_size,
             fft: fft,
-            sample_ring: SliceRingImpl::new(),
             window: window,
             real_input: std::iter::repeat(T::zero()).take(window_size).collect(),
             complex_input: std::iter::repeat(Complex::<T>::zero())
@@ -223,37 +161,28 @@ where
         self.window_size / 2
     }
 
-    #[inline]
-    pub fn len(&self) -> usize {
-        self.sample_ring.len()
-    }
-
-    pub fn append_samples(&mut self, input: &[T]) {
-        self.sample_ring.push_many_back(input);
-    }
-
-    #[inline]
-    pub fn contains_enough_to_compute(&self) -> bool {
-        self.window_size <= self.sample_ring.len()
-    }
-
-    pub fn compute_into_complex_output(&mut self) {
-        assert!(self.contains_enough_to_compute());
-
-        // read into real_input
-        self.sample_ring.read_many_front(&mut self.real_input[..]);
-
+    pub fn compute_into_complex_output(&mut self, input: &[T]) {
         // multiply real_input with window
         if let Some(ref window) = self.window {
-            for (dst, src) in self.real_input.iter_mut().zip(window.iter()) {
-                *dst = *dst * *src;
+            // copy windowed input as real parts into complex_input
+            for (dst, src, window_elem) in
+                izip!(self.complex_input.iter_mut(), input.iter(), window.iter(),)
+            {
+                dst.re = *src * *window_elem;
+                dst.im = T::zero();
+            }
+        } else {
+            // copy input as real parts into complex_input
+            for (dst, src) in self.complex_input.iter_mut().zip(input.iter()) {
+                dst.re = *src;
+                dst.im = T::zero();
             }
         }
-
-        // copy windowed real_input as real parts into complex_input
-        for (dst, src) in self.complex_input.iter_mut().zip(self.real_input.iter()) {
-            dst.re = src.clone();
-            dst.im = T::zero();
+        if input.len() < self.step_size {
+            for dst in &mut self.complex_input[input.len()..self.step_size] {
+                dst.re = T::zero();
+                dst.im = T::zero()
+            }
         }
 
         // compute fft
@@ -263,10 +192,10 @@ where
 
     /// # Panics
     /// panics unless `self.output_size() == output.len()`
-    pub fn compute_complex_column(&mut self, output: &mut [Complex<T>]) {
+    pub fn compute_complex_column(&mut self, input: &[T], output: &mut [Complex<T>]) {
         assert_eq!(self.output_size(), output.len());
 
-        self.compute_into_complex_output();
+        self.compute_into_complex_output(&input);
 
         // copy inplace result of fft to output
         for (dst, src) in output.iter_mut().zip(self.complex_input.iter()) {
@@ -276,10 +205,10 @@ where
 
     /// # Panics
     /// panics unless `self.output_size() == output.len()`
-    pub fn compute_magnitude_column(&mut self, output: &mut [T]) {
+    pub fn compute_magnitude_column(&mut self, input: &[T], output: &mut [T]) {
         assert_eq!(self.output_size(), output.len());
 
-        self.compute_into_complex_output();
+        self.compute_into_complex_output(&input);
 
         // copy inplace result of fft to output
         for (dst, src) in output.iter_mut().zip(self.complex_input.iter()) {
@@ -290,21 +219,15 @@ where
     /// computes a column of the spectrogram
     /// # Panics
     /// panics unless `self.output_size() == output.len()`
-    pub fn compute_column(&mut self, output: &mut [T]) {
+    pub fn compute_column(&mut self, input: &[T], output: &mut [T]) {
         assert_eq!(self.output_size(), output.len());
 
-        self.compute_into_complex_output();
+        self.compute_into_complex_output(&input);
 
         // copy inplace result of fft to output
         for (dst, src) in output.iter_mut().zip(self.complex_input.iter()) {
             *dst = log10_positive(src.norm());
         }
-    }
-
-    /// make a step
-    /// drops `self.step_size` samples from the internal buffer `self.sample_ring`.
-    pub fn move_to_next_column(&mut self) {
-        self.sample_ring.drop_many_front(self.step_size);
     }
 }
 

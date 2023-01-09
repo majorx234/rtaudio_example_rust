@@ -75,4 +75,4 @@ egui_extras = { version = "0.19.0", features = ["image",]}
 rustfft = {version = "6.1.0"}
 num = {version = "0.4.0"}
 apodize = {version = "1.0.0"}
-strider = {version = "0.1.3"}
+itertools = {version = "0.10.5"}
