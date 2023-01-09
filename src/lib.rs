@@ -1,4 +1,3 @@
-use scan_fmt::scan_fmt;
 use std::io::BufRead;
 pub mod delay;
 pub mod effect;
