@@ -32,6 +32,9 @@ pub enum WindowType {
 impl FromStr for WindowType {
     type Err = &'static str;
 
+    /// helps converting strings to window types
+    ///
+    /// * `s` - string slice specifying the window function
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         let lower = s.to_lowercase();
         match &lower[..] {
@@ -119,6 +122,7 @@ where
         let window = Self::window_type_to_window_vec(window_type, window_size);
         Self::new_with_window_vec(window, window_size, step_size)
     }
+
     // TODO this should ideally take an iterator and not a vec
     pub fn new_with_window_vec(
         window: Option<Vec<T>>,
@@ -178,6 +182,8 @@ where
                 dst.im = T::zero();
             }
         }
+
+        // zeropadding
         if input.len() < self.step_size {
             for dst in &mut self.complex_input[input.len()..self.step_size] {
                 dst.re = T::zero();
