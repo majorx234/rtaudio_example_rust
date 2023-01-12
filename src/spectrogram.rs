@@ -12,8 +12,9 @@ pub fn calc_stft(all_samples: &[f32], window_size: usize, step_size: usize) -> V
     let window_type: WindowType = WindowType::Hanning;
     let mut stft = STFT::<f32>::new(window_type, window_size, step_size);
     let mut spectrogram_column: Vec<f32> = std::iter::repeat(0.).take(stft.output_size()).collect();
-    // iterate over all the samples in chunks of step_size samples.
-    for some_samples in (all_samples[..]).chunks(step_size) {
+    // iterate in step_size steps over all the samples 
+    // take out chunks of window_size samples.
+    for some_samples in (all_samples[..]).window(window_size).step_by(step_size) {
         stft.compute_column(&some_samples, &mut spectrogram_column[..]);
         spectrogram.push(spectrogram_column.clone());
     }
