@@ -1,6 +1,6 @@
 [package]
 name = "rtaudio_example_rust"
-version = "1.0.0"
+version = "1.0.1"
 authors = ["MajorX234 <majorx234@googlemail.com>"]
 edition = "2018"
 
@@ -29,7 +29,6 @@ path = "src/overdrive/bin/main.rs"
 name = "overdrive_unsymetric"
 path = "src/overdrive/bin/main_unsymetric.rs"
 
-
 [[bin]]
 name = "delay"
 path = "src/delay/bin/main.rs"
@@ -53,6 +52,10 @@ path = "src/plot_wave/bin/main_advance.rs"
 [[bin]]
 name = "plotters_wave"
 path = "src/plotters_wave/bin/main.rs"
+
+[[bin]]
+name = "wave_plotter_gui"
+path = "src/wave_plotter_gui/bin/main.rs"
 
 [[bin]]
 name = "spectrogram"
