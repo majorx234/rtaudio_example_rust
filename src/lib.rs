@@ -5,6 +5,7 @@ pub mod overdrive;
 pub mod simple_adsr;
 pub mod spectrogram;
 pub mod stft;
+pub mod wave;
 
 pub fn read_data() -> (usize, std::vec::Vec<f32>) {
     let values_data = std::io::stdin()

@@ -1,4 +1,4 @@
-use crate::wave::Wave;
+use rtaudio_lib::wave::Wave;
 use rtaudio_lib::write_data;
 #[derive(Debug)]
 

@@ -21,13 +21,14 @@ mod invsaw_wave;
 mod saw_wave;
 mod sine_wave;
 mod tri_wave;
-mod wave;
+
 use fm_wave::FMWave;
 use invsaw_wave::InvSawWave;
+use rtaudio_lib::wave::Wave;
 use saw_wave::SawWave;
 use sine_wave::SineWave;
 use tri_wave::TriWave;
-use wave::Wave;
+
 fn main() {
     let mut argit = args();
     let wave_form = argit.nth(1).clone();

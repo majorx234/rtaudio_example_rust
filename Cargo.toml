@@ -14,6 +14,10 @@ name = "gen_wave"
 path = "src/gen_wave/bin/main.rs"
 
 [[bin]]
+name = "sample_play"
+path = "src/sample_play/bin/main.rs"
+
+[[bin]]
 name = "adsr_modificator"
 path = "src/adsr_modificator/bin/main.rs"
 
@@ -79,3 +83,4 @@ rustfft = {version = "6.1.0"}
 num = {version = "0.4.0"}
 apodize = {version = "1.0.0"}
 itertools = {version = "0.10.5"}
+wav = { version = "1.0.0" }
