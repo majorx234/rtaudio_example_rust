@@ -83,4 +83,4 @@ rustfft = {version = "6.1.0"}
 num = {version = "0.4.0"}
 apodize = {version = "1.0.0"}
 itertools = {version = "0.10.5"}
-wav = { version = "1.0.0" }
+hound = { version = "3.5.0"}
