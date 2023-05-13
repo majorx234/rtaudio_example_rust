@@ -2,6 +2,7 @@ use std::io::BufRead;
 pub mod delay;
 pub mod effect;
 pub mod overdrive;
+pub mod reverb;
 pub mod simple_adsr;
 pub mod spectrogram;
 pub mod stft;
