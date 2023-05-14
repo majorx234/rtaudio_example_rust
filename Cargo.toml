@@ -47,7 +47,7 @@ path = "src/filter/bin/filter_test.rs"
 
 [[bin]]
 name = "reverb"
-path = "src/overdrive/bin/main.rs"
+path = "src/reverb/bin/main.rs"
 
 [[bin]]
 name = "plot_wave"
